@@ -16,6 +16,7 @@
     "lottie-react": "^2.4.1",
     "morgan": "^1.10.1",
     "react": "^19.1.1",
+    "react-datepicker": "^8.4.0",
     "react-dom": "^19.1.1",
     "react-hot-toast": "^2.5.2",
     "react-icon": "^1.0.0",

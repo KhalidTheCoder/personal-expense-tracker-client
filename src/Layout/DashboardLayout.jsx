@@ -6,7 +6,7 @@ import { AuthContext } from "../Providers/AuthContext";
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
-  const { user, logOut } = useContext(AuthContext);
+  const { logOut } = useContext(AuthContext);
 
   const navItems = [
     { icon: <FaTachometerAlt />, text: "Dashboard", path: "/" },
