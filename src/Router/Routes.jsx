@@ -6,24 +6,41 @@ import Register from "../Pages/Authentication/Register";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import AddExpense from "../Pages/Dashboard/AddExpense";
 import Expenses from "../Pages/Dashboard/Expenses";
+import PrivateRoute from "./PrivateRoute";
 
 const Routes = createBrowserRouter([
   {
     path: "/",
-    element: <DashboardLayout />,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRoute>
+    ),
     errorElement: <Error />,
     children: [
       {
         index: true,
-        element: <Dashboard />,
+        element: (
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        ),
       },
       {
         path: "add-expense",
-        element: <AddExpense />,
+        element: (
+          <PrivateRoute>
+            <AddExpense />
+          </PrivateRoute>
+        ),
       },
       {
         path: "expenses",
-        element: <Expenses />,
+        element: (
+          <PrivateRoute>
+            <Expenses></Expenses>
+          </PrivateRoute>
+        ),
       },
     ],
   },

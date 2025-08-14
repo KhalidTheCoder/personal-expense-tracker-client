@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router";
 import { FaTachometerAlt, FaPlus, FaList, FaSignOutAlt } from "react-icons/fa";
+import { AuthContext } from "../Providers/AuthContext";
 
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+  const { user, logOut } = useContext(AuthContext);
 
   const navItems = [
     { icon: <FaTachometerAlt />, text: "Dashboard", path: "/" },
@@ -60,9 +62,9 @@ export default function DashboardLayout() {
 
         <div className="absolute bottom-4 w-full px-4">
           <Link
-            to="/logout"
+            to="/login"
             className="flex items-center gap-3 px-4 py-2 rounded-md cursor-pointer transition hover:bg-red-500 text-red-100"
-            onClick={() => setSidebarOpen(false)}
+            onClick={logOut}
           >
             <span className="text-lg">
               <FaSignOutAlt />
@@ -73,7 +75,7 @@ export default function DashboardLayout() {
       </aside>
 
       {/* Here Is The Main Content Part That Will Change Dynamically */}
-      
+
       <main className="flex-1 overflow-y-auto p-6 mt-12 md:mt-0">
         <Outlet />
       </main>

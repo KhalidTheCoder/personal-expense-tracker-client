@@ -1,14 +1,35 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Navbar from "../../Components/Navbar";
 import Lottie from "lottie-react";
 import loginAnimation from "../../assets/lottie/login.json";
+import { Link, useLocation, useNavigate } from "react-router";
+import { AuthContext } from "../../Providers/AuthContext";
+import toast from "react-hot-toast";
 
 const Login = () => {
+  const { signInUser } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
+
+    const loadingToast = toast.loading("Signing you in...");
+
+    signInUser(email, password)
+      .then(() => {
+        toast.dismiss(loadingToast);
+        toast.success("Signed in successfully! 🎉");
+        navigate(location.state?.from?.pathname || "/", {
+          replace: true,
+        });
+      })
+      .catch((error) => {
+        toast.dismiss(loadingToast);
+        toast.error(error.message || "Login failed. Please try again.");
+      });
   };
 
   return (
@@ -70,9 +91,9 @@ const Login = () => {
 
             <p className="text-sm text-center mt-4 text-gray-600">
               Don't have an account?{" "}
-              <a href="/register" className="text-[#A594F9] hover:underline">
+              <Link to="/register" state={location.state} className="text-[#A594F9] hover:underline">
                 Register here
-              </a>
+              </Link>
             </p>
           </div>
         </div>
