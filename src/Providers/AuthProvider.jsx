@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  updateProfile,
 } from "firebase/auth";
 import toast from "react-hot-toast";
 import { auth } from "../Firebase/firebase.config";
@@ -13,15 +14,44 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const createUser = (email, password) => {
+
+  //Create User With Email And password
+
+  const createUser = async (email, password, name) => {
     setLoading(true);
-    return createUserWithEmailAndPassword(auth, email, password);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      if (name) {
+        await updateProfile(userCredential.user, {
+          displayName: name,
+        });
+      }
+
+      return userCredential;
+    } catch (error) {
+      toast.error(error.message);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
+
+
+  //Sign In User
 
   const signInUser = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
+
+
+
+  //Logout User
 
   const logOut = async () => {
     setLoading(true);
@@ -32,6 +62,9 @@ const AuthProvider = ({ children }) => {
       toast.error("Sign out failed: " + error.message);
     }
   };
+
+
+  //User Observer  
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (loggedInUser) => {

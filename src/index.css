@@ -1,2 +1,11 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+.recharts-wrapper:focus,
+.recharts-surface:focus {
+  outline: none;
+}
+
+.recharts-pie path:focus {
+  outline: none;
+}

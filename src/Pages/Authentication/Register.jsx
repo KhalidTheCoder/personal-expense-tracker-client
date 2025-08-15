@@ -17,7 +17,7 @@ const Register = () => {
     e.preventDefault();
     const loadingToast = toast.loading("Creating your account...");
 
-    createUser(email, password)
+    createUser(email, password, name)
       .then(() => {
         toast.dismiss(loadingToast);
         toast.success("Account created successfully! 🎉");

@@ -41,10 +41,10 @@ const Expenses = () => {
   }, [user, token]);
 
   const categoryColors = {
-    Food: "bg-green-100 text-green-800",
-    Transport: "bg-blue-100 text-blue-800",
-    Shopping: "bg-pink-100 text-pink-800",
-    Others: "bg-gray-100 text-gray-800",
+    Food: "bg-[#A594F9] text-white",
+    Transport: "bg-[#4B3F72] text-white",
+    Shopping: "bg-[#CDC1FF] text-[#4B3F72]",
+    Others: "bg-[#FFD580] text-[#4B3F72]",
   };
 
   const handleEdit = (expense) => {
