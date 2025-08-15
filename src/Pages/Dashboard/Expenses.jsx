@@ -1,11 +1,199 @@
-import React from 'react';
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { FaTag, FaTrash, FaEdit } from "react-icons/fa";
+import { AuthContext } from "../../Providers/AuthContext";
+import { Link } from "react-router";
+import ExpenseCard from "../../components/ExpenseCard";
 
 const Expenses = () => {
-    return (
-        <div>
-            
+  const [expenses, setExpenses] = useState([]);
+  const [total, setTotal] = useState(0);
+  const { user } = useContext(AuthContext);
+
+  // Getting Expenses Data Here
+  useEffect(() => {
+    if (!user?.email) return;
+
+    axios
+      .get("http://localhost:5000/expenses", {
+        params: { userEmail: user.email },
+      })
+      .then((res) => {
+        const expenseList = Array.isArray(res.data) ? res.data : [];
+        setExpenses(expenseList);
+        setTotal(
+          expenseList.reduce((sum, expense) => sum + (expense.amount || 0), 0)
+        );
+      })
+      .catch((err) => console.error("Error fetching expenses:", err));
+  }, [user]);
+
+  const categoryColors = {
+    Food: "bg-green-100 text-green-800",
+    Transport: "bg-blue-100 text-blue-800",
+    Shopping: "bg-pink-100 text-pink-800",
+    Others: "bg-gray-100 text-gray-800",
+  };
+
+  const handleEdit = (expense) => {
+    console.log("Edit", expense);
+  };
+
+  const handleDelete = (id) => {
+    console.log("Delete", id);
+  };
+
+  return (
+    <div className="p-6">
+      <h1 className="text-4xl font-extrabold text-[#4B3F72] mb-2 text-center">
+        Expense List
+      </h1>
+      <p className="text-lg text-gray-600 text-center mb-6">
+        Review and manage all your recorded expenses in one place.
+      </p>
+
+      <div className="bg-white rounded-xl shadow-sm p-5 mb-6 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-[#A594F9] to-[#8E7CFA] shadow-md">
+            <Link to="/add-expense">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="white"
+                className="w-5 h-5 sm:w-6 sm:h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 6v12m6-6H6"
+                />
+              </svg>
+            </Link>
+          </div>
+
+          <div>
+            <p className="text-xs sm:text-sm text-gray-500 font-medium">
+              Total Expenses
+            </p>
+            <h2 className="text-lg sm:text-2xl font-bold text-gray-900">
+              ${total.toFixed(2)}
+            </h2>
+          </div>
         </div>
-    );
+
+        <div className="text-right">
+          <p className="text-sm text-gray-500">All Records</p>
+          <p className="text-lg font-semibold text-gray-800">
+            {expenses.length} Records
+          </p>
+        </div>
+      </div>
+
+      {/* this Card component is for Mobile View*/}
+      <div className="block md:hidden">
+        {expenses.length > 0 ? (
+          expenses.map((exp, idx) => (
+            <ExpenseCard
+              key={idx}
+              expense={exp}
+              categoryColors={categoryColors}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))
+        ) : (
+          <div className="bg-[#F5EFFF] rounded-xl shadow-md p-6 text-center">
+            <h2 className="text-xl font-bold text-[#4B3F72] mb-2">
+              No expenses recorded
+            </h2>
+            <p className="text-gray-600 mb-4">
+              You haven’t added any expenses yet. Start tracking your spending
+              now!
+            </p>
+            <Link
+              to="/add-expense"
+              className="px-6 py-2 rounded-lg bg-[#A594F9] text-white font-semibold hover:bg-[#8E7CFA] transition"
+            >
+              + Add Expense
+            </Link>
+          </div>
+        )}
+      </div>
+
+      {/* Here is the Table for Desktop view */}
+      <div className="hidden md:block overflow-x-auto bg-white rounded-xl shadow-md">
+        <table className="table w-full">
+          <thead className="bg-[#CDC1FF] text-[#4B3F72]">
+            <tr>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {expenses.length > 0 ? (
+              expenses.map((exp, idx) => (
+                <tr key={idx} className="hover:bg-gray-50 transition">
+                  <td className="font-medium">{exp.title}</td>
+                  <td>
+                    <span
+                      className={`badge border-none ${
+                        categoryColors[exp.category] || categoryColors["Others"]
+                      }`}
+                    >
+                      <FaTag className="mr-1" /> {exp.category}
+                    </span>
+                  </td>
+                  <td className="text-[#4B3F72] font-semibold">
+                    ${Number(exp.amount).toFixed(2)}
+                  </td>
+                  <td>{new Date(exp.date).toLocaleDateString()}</td>
+                  <td className="flex gap-2">
+                    <button
+                      onClick={() => handleEdit(exp)}
+                      className="btn btn-xs border-none bg-[#A594F9] text-white hover:bg-[#8E7CFA]"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(exp._id)}
+                      className="btn btn-xs border-none bg-red-500 text-white hover:bg-red-600"
+                    >
+                      <FaTrash />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" className="p-6">
+                  <div className="bg-[#F5EFFF] rounded-xl shadow-md p-6 flex flex-col items-center">
+                    <h2 className="text-xl font-bold text-[#4B3F72] mb-2">
+                      No expenses recorded
+                    </h2>
+                    <p className="text-gray-600 mb-4">
+                      You haven’t added any expenses yet. Start tracking your
+                      spending now!
+                    </p>
+                    <Link
+                      to="/add-expense"
+                      className="px-6 py-2 rounded-lg bg-[#A594F9] text-white font-semibold hover:bg-[#8E7CFA] transition"
+                    >
+                      + Add Expense
+                    </Link>
+                  </div>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 };
 
 export default Expenses;

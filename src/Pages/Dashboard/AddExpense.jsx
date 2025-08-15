@@ -1,13 +1,15 @@
-import React, { useState, forwardRef } from "react";
+import React, { useState, forwardRef, useContext } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import Lottie from "lottie-react";
 import expenseAnimation from "../../assets/lottie/Investment.json";
+import { AuthContext } from "../../Providers/AuthContext";
 
 const AddExpense = () => {
   const [expenseDate, setExpenseDate] = useState(null);
+  const { user } = useContext(AuthContext);
 
   const CustomInput = forwardRef(({ value, onClick }, ref) => (
     <button
@@ -23,13 +25,13 @@ const AddExpense = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const name = e.target.name.value.trim();
+   
+    const userEmail = user.email
     const title = e.target.title.value.trim();
     const amount = e.target.amount.value.trim();
     const category = e.target.category.value;
     const date = expenseDate;
 
-    if (!name) return toast.error("Name is required");
     if (!title || title.length < 3)
       return toast.error("Title must be at least 3 characters long");
     if (!amount || isNaN(amount) || Number(amount) <= 0)
@@ -39,7 +41,7 @@ const AddExpense = () => {
 
     axios
       .post("http://localhost:5000/expenses", {
-        name,
+        userEmail,
         title,
         amount: Number(amount),
         category,
@@ -92,13 +94,7 @@ const AddExpense = () => {
             className="space-y-4"
             data-aos="fade-up"
           >
-            <input
-              type="text"
-              name="name"
-              placeholder="Your Name"
-              className="w-full py-2 px-3 rounded-lg border border-[#A594F9] bg-[#F5EFFF] text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#A594F9]"
-            />
-
+           
             <input
               type="text"
               name="title"
