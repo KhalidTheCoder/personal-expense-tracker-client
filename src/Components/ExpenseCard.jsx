@@ -15,7 +15,7 @@ const ExpenseCard = ({ expense, categoryColors, onEdit, onDelete }) => {
         </span>
       </div>
       <p className="text-[#4B3F72] font-bold mt-2">
-        ${Number(expense.amount).toFixed(2)}
+        ${Number(expense.amount)}
       </p>
       <p className="text-gray-500 text-sm">
         {new Date(expense.date).toLocaleDateString()}

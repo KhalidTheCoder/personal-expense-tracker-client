@@ -35,7 +35,7 @@ const Routes = createBrowserRouter([
         ),
       },
       {
-        path: "expenses",
+        path: "all-expenses",
         element: (
           <PrivateRoute>
             <Expenses></Expenses>

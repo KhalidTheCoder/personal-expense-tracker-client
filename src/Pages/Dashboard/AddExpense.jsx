@@ -11,6 +11,8 @@ const AddExpense = () => {
   const [expenseDate, setExpenseDate] = useState(null);
   const { user } = useContext(AuthContext);
 
+  //Custom Button For DatePicker Input
+
   const CustomInput = forwardRef(({ value, onClick }, ref) => (
     <button
       type="button"
@@ -32,12 +34,16 @@ const AddExpense = () => {
     const category = e.target.category.value;
     const date = expenseDate;
 
+    //Validation
+
     if (!title || title.length < 3)
       return toast.error("Title must be at least 3 characters long");
     if (!amount || isNaN(amount) || Number(amount) <= 0)
       return toast.error("Amount must be a number greater than 0");
     if (!category) return toast.error("Please select a category");
     if (!date) return toast.error("Please select a date");
+
+    // Sending POST Request To Add or Create Expense
 
     axios
       .post("http://localhost:5000/expenses", {

@@ -3,14 +3,20 @@ import React, { useContext, useEffect, useState } from "react";
 import { FaTag, FaTrash, FaEdit } from "react-icons/fa";
 import { AuthContext } from "../../Providers/AuthContext";
 import { Link } from "react-router";
-import ExpenseCard from "../../components/ExpenseCard";
+import ExpenseCard from "../../Components/ExpenseCard";
+import UpdateExpenseModal from "../../Components/UpdateExpenseModal";
+import { HiOutlinePlus } from "react-icons/hi";
 
 const Expenses = () => {
   const [expenses, setExpenses] = useState([]);
   const [total, setTotal] = useState(0);
   const { user } = useContext(AuthContext);
 
-  // Getting Expenses Data Here
+  const [showModal, setShowModal] = useState(false);
+  const [selectedExpense, setSelectedExpense] = useState(null);
+
+  // Getting The Users Expenses Data
+
   useEffect(() => {
     if (!user?.email) return;
 
@@ -21,11 +27,13 @@ const Expenses = () => {
       .then((res) => {
         const expenseList = Array.isArray(res.data) ? res.data : [];
         setExpenses(expenseList);
-        setTotal(
-          expenseList.reduce((sum, expense) => sum + (expense.amount || 0), 0)
-        );
+        let totalAmount = 0;
+        expenseList.forEach((e) => {
+          totalAmount += e.amount || 0;
+        });
+        setTotal(totalAmount);
       })
-      .catch((err) => console.error("Error fetching expenses:", err));
+      .catch((err) => console.error(err));
   }, [user]);
 
   const categoryColors = {
@@ -36,53 +44,53 @@ const Expenses = () => {
   };
 
   const handleEdit = (expense) => {
-    console.log("Edit", expense);
+    setSelectedExpense(expense);
+    setShowModal(true);
   };
 
-  const handleDelete = (id) => {
-    console.log("Delete", id);
+  // Function to handle updated expense from modal
+
+  const handleUpdatedExpense = (updatedData) => {
+    setExpenses((prev) =>
+      prev.map((exp) =>
+        exp._id === selectedExpense._id ? { ...exp, ...updatedData } : exp
+      )
+    );
+    setTotal((prev) => prev);
+    setSelectedExpense(null);
   };
 
   return (
     <div className="p-6">
-      <h1 className="text-4xl font-extrabold text-[#4B3F72] mb-2 text-center">
+      <h1
+        className="text-4xl font-extrabold text-[#4B3F72] mb-2 text-center"
+        data-aos="fade-down"
+      >
         Expense List
       </h1>
-      <p className="text-lg text-gray-600 text-center mb-6">
+      <p className="text-lg text-gray-600 text-center mb-6" data-aos="fade-up">
         Review and manage all your recorded expenses in one place.
       </p>
 
-      <div className="bg-white rounded-xl shadow-sm p-5 mb-6 flex items-center justify-between">
+      <div
+        className="bg-white rounded-xl shadow-sm p-5 mb-6 flex items-center justify-between"
+        data-aos="fade-right"
+      >
         <div className="flex items-center gap-4">
           <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-[#A594F9] to-[#8E7CFA] shadow-md">
             <Link to="/add-expense">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="white"
-                className="w-5 h-5 sm:w-6 sm:h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 6v12m6-6H6"
-                />
-              </svg>
+              <HiOutlinePlus className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </Link>
           </div>
-
           <div>
             <p className="text-xs sm:text-sm text-gray-500 font-medium">
               Total Expenses
             </p>
             <h2 className="text-lg sm:text-2xl font-bold text-gray-900">
-              ${total.toFixed(2)}
+              ${total}
             </h2>
           </div>
         </div>
-
         <div className="text-right">
           <p className="text-sm text-gray-500">All Records</p>
           <p className="text-lg font-semibold text-gray-800">
@@ -91,7 +99,8 @@ const Expenses = () => {
         </div>
       </div>
 
-      {/* this Card component is for Mobile View*/}
+      {/* This Card component is for Mobile View*/}
+
       <div className="block md:hidden">
         {expenses.length > 0 ? (
           expenses.map((exp, idx) => (
@@ -100,11 +109,10 @@ const Expenses = () => {
               expense={exp}
               categoryColors={categoryColors}
               onEdit={handleEdit}
-              onDelete={handleDelete}
             />
           ))
         ) : (
-          <div className="bg-[#F5EFFF] rounded-xl shadow-md p-6 text-center">
+          <div className="bg-[#E5D9F2] rounded-xl shadow-md p-6 text-center">
             <h2 className="text-xl font-bold text-[#4B3F72] mb-2">
               No expenses recorded
             </h2>
@@ -123,7 +131,11 @@ const Expenses = () => {
       </div>
 
       {/* Here is the Table for Desktop view */}
-      <div className="hidden md:block overflow-x-auto bg-white rounded-xl shadow-md">
+
+      <div
+        className="hidden md:block overflow-x-auto bg-white rounded-xl shadow-md"
+        data-aos="fade-left"
+      >
         <table className="table w-full">
           <thead className="bg-[#CDC1FF] text-[#4B3F72]">
             <tr>
@@ -149,7 +161,7 @@ const Expenses = () => {
                     </span>
                   </td>
                   <td className="text-[#4B3F72] font-semibold">
-                    ${Number(exp.amount).toFixed(2)}
+                    ${Number(exp.amount)}
                   </td>
                   <td>{new Date(exp.date).toLocaleDateString()}</td>
                   <td className="flex gap-2">
@@ -159,10 +171,7 @@ const Expenses = () => {
                     >
                       <FaEdit />
                     </button>
-                    <button
-                      onClick={() => handleDelete(exp._id)}
-                      className="btn btn-xs border-none bg-red-500 text-white hover:bg-red-600"
-                    >
+                    <button className="btn btn-xs border-none bg-red-500 text-white hover:bg-red-600">
                       <FaTrash />
                     </button>
                   </td>
@@ -192,6 +201,17 @@ const Expenses = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Here is The Update Modal */}
+
+      {selectedExpense && (
+        <UpdateExpenseModal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          expense={selectedExpense}
+          onUpdated={handleUpdatedExpense}
+        />
+      )}
     </div>
   );
 };

@@ -11,11 +11,12 @@ export default function DashboardLayout() {
   const navItems = [
     { icon: <FaTachometerAlt />, text: "Dashboard", path: "/" },
     { icon: <FaPlus />, text: "Add Expense", path: "/add-expense" },
-    { icon: <FaList />, text: "All Expenses", path: "/expenses" },
+    { icon: <FaList />, text: "All Expenses", path: "/all-expenses" },
   ];
 
   return (
     <div className="flex h-screen bg-[#F5EFFF] text-gray-800 font-medium">
+      
       {/* This Is The  Mobile Navbar To Open And Close The Sidebar */}
 
       <div className="md:hidden fixed top-0 left-0 w-full bg-[#A594F9] text-white flex items-center justify-between px-4 py-3 shadow-md z-20">
