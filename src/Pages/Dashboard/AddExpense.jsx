@@ -56,13 +56,30 @@ const AddExpense = () => {
   };
 
   return (
-    <div className="">
-      <h1 className="text-5xl font-extrabold text-[#4B3F72] mt-10 mb-8 text-center">
+    <div>
+      <h1
+        className="text-5xl font-extrabold text-[#4B3F72] mt-10 mb-4 text-center"
+        data-aos="fade-down"
+      >
         Add New Expense
       </h1>
-      <div className="min-h-[calc(100vh-200px)] flex items-center justify-center bg-transparent">
-        <div className="max-w-lg mx-auto bg-[#E5D9F2] p-6 rounded-2xl shadow-lg mt-10">
-          <div className="flex justify-center mb-4">
+      <p
+        className="text-lg font font-medium text-gray-600 text-center max-w-2xl mx-auto mb-8"
+        data-aos="fade-up"
+      >
+        Keep track of your spending by adding each expense with accurate
+        details. This helps you manage your budget, analyze trends, and stay in
+        control of your finances.
+      </p>
+      <div
+        className="min-h-[calc(100vh-3000px)] flex items-center justify-center bg-transparent"
+        data-aos="zoom-in"
+      >
+        <div
+          className="max-w-lg mx-auto bg-[#E5D9F2] p-6 rounded-2xl shadow-lg mt-10"
+          data-aos="fade-up"
+        >
+          <div className="flex justify-center mb-4" data-aos="zoom-in">
             <Lottie
               animationData={expenseAnimation}
               loop={true}
@@ -70,7 +87,11 @@ const AddExpense = () => {
             />
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4"
+            data-aos="fade-up"
+          >
             <input
               type="text"
               name="name"
