@@ -12,6 +12,7 @@ const Expenses = () => {
   const [expenses, setExpenses] = useState([]);
   const [total, setTotal] = useState(0);
   const { user } = useContext(AuthContext);
+  const token = user?.accessToken;
 
   const [showModal, setShowModal] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
@@ -23,7 +24,9 @@ const Expenses = () => {
 
     axios
       .get("http://localhost:5000/expenses", {
-        params: { userEmail: user.email },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
       .then((res) => {
         const expenseList = Array.isArray(res.data) ? res.data : [];
@@ -35,7 +38,7 @@ const Expenses = () => {
         setTotal(totalAmount);
       })
       .catch((err) => console.error(err));
-  }, [user]);
+  }, [user, token]);
 
   const categoryColors = {
     Food: "bg-green-100 text-green-800",
@@ -57,7 +60,13 @@ const Expenses = () => {
         exp._id === selectedExpense._id ? { ...exp, ...updatedData } : exp
       )
     );
-    setTotal((prev) => prev);
+
+    setTotal((prevTotal) => {
+      const oldAmount = Number(selectedExpense.amount) || 0;
+      const newAmount = Number(updatedData.amount) || 0;
+      return prevTotal - oldAmount + newAmount;
+    });
+
     setSelectedExpense(null);
   };
 
@@ -75,10 +84,22 @@ const Expenses = () => {
       if (result.isConfirmed) {
         axios
           .delete(`http://localhost:5000/expenses/${expenseId}`, {
-            params: { userEmail: user.email },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           })
           .then(() => {
             setExpenses((prev) => prev.filter((exp) => exp._id !== expenseId));
+
+            const deletedExpense = expenses.find(
+              (exp) => exp._id === expenseId
+            );
+            if (deletedExpense) {
+              setTotal(
+                (prevTotal) => prevTotal - (Number(deletedExpense.amount) || 0)
+              );
+            }
+
             Swal.fire("Deleted!", "Your expense has been removed.", "success");
           })
           .catch((err) => {

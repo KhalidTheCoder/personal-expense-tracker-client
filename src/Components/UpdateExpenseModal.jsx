@@ -9,6 +9,7 @@ import { AuthContext } from "../Providers/AuthContext";
 
 const UpdateExpenseModal = ({ isOpen, onClose, expense, onUpdated }) => {
   const { user } = useContext(AuthContext);
+  const token = user?.accessToken;
   const [expenseDate, setExpenseDate] = useState(new Date(expense.date));
 
   //Custom Button For DatePicker Input
@@ -32,7 +33,6 @@ const UpdateExpenseModal = ({ isOpen, onClose, expense, onUpdated }) => {
       amount: e.target.amount.value.trim(),
       category: e.target.category.value,
       date: expenseDate.toISOString(),
-      userEmail: expense.userEmail,
     };
 
     //Validation
@@ -52,8 +52,8 @@ const UpdateExpenseModal = ({ isOpen, onClose, expense, onUpdated }) => {
         `http://localhost:5000/expenses/${expense._id}`,
         updatedExpense,
         {
-          params: {
-            userEmail: user.email,
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
         }
       );

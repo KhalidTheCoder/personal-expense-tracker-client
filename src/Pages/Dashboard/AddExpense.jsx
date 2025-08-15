@@ -6,10 +6,13 @@ import { toast } from "react-hot-toast";
 import Lottie from "lottie-react";
 import expenseAnimation from "../../assets/lottie/Investment.json";
 import { AuthContext } from "../../Providers/AuthContext";
+import { useNavigate } from "react-router";
 
 const AddExpense = () => {
   const [expenseDate, setExpenseDate] = useState(null);
   const { user } = useContext(AuthContext);
+  const token = user?.accessToken;
+  const navigate = useNavigate();
 
   //Custom Button For DatePicker Input
 
@@ -27,36 +30,44 @@ const AddExpense = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-   
-    const userEmail = user.email
-    const title = e.target.title.value.trim();
-    const amount = e.target.amount.value.trim();
-    const category = e.target.category.value;
-    const date = expenseDate;
+    const addExpense = {
+      title: e.target.title.value.trim(),
+      amount: e.target.amount.value.trim(),
+      category: e.target.category.value,
+      date: expenseDate,
+    };
 
     //Validation
 
-    if (!title || title.length < 3)
+    if (!addExpense.title || addExpense.title.length < 3)
       return toast.error("Title must be at least 3 characters long");
-    if (!amount || isNaN(amount) || Number(amount) <= 0)
+    if (
+      !addExpense.amount ||
+      isNaN(addExpense.amount) ||
+      Number(addExpense.amount) <= 0
+    )
       return toast.error("Amount must be a number greater than 0");
-    if (!category) return toast.error("Please select a category");
-    if (!date) return toast.error("Please select a date");
+    if (!addExpense.category) return toast.error("Please select a category");
+    if (!addExpense.date) return toast.error("Please select a date");
 
     // Sending POST Request To Add or Create Expense
 
     axios
-      .post("http://localhost:5000/expenses", {
-        userEmail,
-        title,
-        amount: Number(amount),
-        category,
-        date,
-      })
+      .post(
+        "http://localhost:5000/expenses",
+
+        addExpense,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then(() => {
         toast.success("Expense added successfully!");
         e.target.reset();
         setExpenseDate(null);
+        navigate("/all-expenses")
       })
       .catch(() => {
         toast.error("Failed to add expense");
@@ -100,7 +111,6 @@ const AddExpense = () => {
             className="space-y-4"
             data-aos="fade-up"
           >
-           
             <input
               type="text"
               name="title"

@@ -7,7 +7,6 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import toast from "react-hot-toast";
-import axios from "axios";
 import { auth } from "../Firebase/firebase.config";
 
 const AuthProvider = ({ children }) => {
@@ -37,18 +36,6 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (loggedInUser) => {
       setUser(loggedInUser);
-
-      if (loggedInUser) {
-        axios
-          .get("http://localhost:5000/", {
-            headers: {
-              Authorization: `Bearer ${loggedInUser.accessToken}`,
-            },
-          })
-          .catch((err) => {
-            console.error("Token verification failed:", err);
-          });
-      }
 
       setLoading(false);
     });
