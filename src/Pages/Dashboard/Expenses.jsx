@@ -6,6 +6,7 @@ import { Link } from "react-router";
 import ExpenseCard from "../../Components/ExpenseCard";
 import UpdateExpenseModal from "../../Components/UpdateExpenseModal";
 import { HiOutlinePlus } from "react-icons/hi";
+import Swal from "sweetalert2";
 
 const Expenses = () => {
   const [expenses, setExpenses] = useState([]);
@@ -60,6 +61,38 @@ const Expenses = () => {
     setSelectedExpense(null);
   };
 
+  // Function to handle delete
+  const handleDelete = (expenseId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This expense will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`http://localhost:5000/expenses/${expenseId}`, {
+            params: { userEmail: user.email },
+          })
+          .then(() => {
+            setExpenses((prev) => prev.filter((exp) => exp._id !== expenseId));
+            Swal.fire("Deleted!", "Your expense has been removed.", "success");
+          })
+          .catch((err) => {
+            console.error(err);
+            Swal.fire(
+              "Error!",
+              "Something went wrong while deleting.",
+              "error"
+            );
+          });
+      }
+    });
+  };
+
   return (
     <div className="p-6">
       <h1
@@ -109,6 +142,7 @@ const Expenses = () => {
               expense={exp}
               categoryColors={categoryColors}
               onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           ))
         ) : (
@@ -171,7 +205,10 @@ const Expenses = () => {
                     >
                       <FaEdit />
                     </button>
-                    <button className="btn btn-xs border-none bg-red-500 text-white hover:bg-red-600">
+                    <button
+                      onClick={() => handleDelete(exp._id)}
+                      className="btn btn-xs border-none bg-red-500 text-white hover:bg-red-600"
+                    >
                       <FaTrash />
                     </button>
                   </td>
