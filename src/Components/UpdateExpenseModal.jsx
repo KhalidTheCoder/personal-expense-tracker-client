@@ -49,7 +49,7 @@ const UpdateExpenseModal = ({ isOpen, onClose, expense, onUpdated }) => {
 
     try {
       await axios.patch(
-        `http://localhost:5000/expenses/${expense._id}`,
+        `https://personal-expense-tracker-server.vercel.app/expenses/${expense._id}`,
         updatedExpense,
         {
           headers: {

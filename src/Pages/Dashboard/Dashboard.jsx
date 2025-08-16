@@ -42,7 +42,7 @@ const Dashboard = () => {
     if (!user?.accessToken) return;
 
     axios
-      .get("http://localhost:5000/expenses", {
+      .get("https://personal-expense-tracker-server.vercel.app/expenses", {
         headers: { Authorization: `Bearer ${user.accessToken}` },
       })
       .then((res) => {
@@ -126,11 +126,7 @@ const Dashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div
-          className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition flex items-center gap-4"
-          data-aos="fade-up"
-          data-aos-delay="0"
-        >
+        <div className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition flex items-center gap-4">
           <div className="p-3 bg-[#A594F9] text-white rounded-full shadow-md">
             <FaMoneyBillWave size={24} />
           </div>
@@ -142,11 +138,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div
-          className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition flex items-center gap-4"
-          data-aos="fade-up"
-          data-aos-delay="100"
-        >
+        <div className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition flex items-center gap-4">
           <div className="p-3 bg-[#CDC1FF] text-[#4B3F72] rounded-full shadow-md">
             <FaChartPie size={24} />
           </div>
@@ -158,11 +150,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div
-          className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition flex items-center gap-4"
-          data-aos="fade-up"
-          data-aos-delay="200"
-        >
+        <div className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition flex items-center gap-4">
           <div className="p-3 bg-[#FFD580] text-[#4B3F72] rounded-full shadow-md">
             <FaCalendarDay size={24} />
           </div>
@@ -174,11 +162,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div
-          className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition flex items-center gap-4"
-          data-aos="fade-up"
-          data-aos-delay="300"
-        >
+        <div className="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition flex items-center gap-4">
           <div className="p-3 bg-[#4B3F72] text-white rounded-full shadow-md">
             <FaReceipt size={24} />
           </div>
@@ -191,10 +175,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div
-        className="bg-white rounded-2xl shadow-lg p-6 border-0"
-        data-aos="fade-up"
-      >
+      <div className="bg-white rounded-2xl shadow-lg p-6 border-0">
         <h2
           className="text-3xl font-bold text-center text-[#4B3F72] mb-2"
           data-aos="fade-down"

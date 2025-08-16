@@ -54,7 +54,7 @@ const AddExpense = () => {
 
     axios
       .post(
-        "http://localhost:5000/expenses",
+        "https://personal-expense-tracker-server.vercel.app/expenses",
 
         addExpense,
         {
@@ -109,7 +109,7 @@ const AddExpense = () => {
           <form
             onSubmit={handleSubmit}
             className="space-y-4"
-            data-aos="fade-up"
+            
           >
             <input
               type="text"

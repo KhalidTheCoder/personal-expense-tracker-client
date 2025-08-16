@@ -4,6 +4,7 @@ import registerAnimation from "../../assets/lottie/reg.json";
 import { Link, useLocation, useNavigate } from "react-router";
 import { AuthContext } from "../../Providers/AuthContext";
 import toast from "react-hot-toast";
+import logo from "../../assets/usd-circle.png";
 
 const Register = () => {
   const { createUser } = useContext(AuthContext);
@@ -37,19 +38,20 @@ const Register = () => {
         data-aos-duration="1200"
       >
         <div className="flex-1 p-8 md:p-12 bg-gradient-to-br from-purple-200 via-pink-200 to-blue-200 flex flex-col justify-center items-center text-center">
+          <img className="w-24" src={logo} alt="" />
           <h1
             className="text-4xl md:text-5xl font-extrabold text-[#4B3F72] leading-tight"
             data-aos="fade-down"
           >
-            Join Your Smart Financial Journey
+            Expense Tracker
           </h1>
           <p
-            className="mt-4 text-gray-600 text-lg max-w-md"
+            className="mt-4 text-gray-600 font-medium text-lg max-w-md"
             data-aos="fade-up"
             data-aos-delay="200"
           >
-            Create your account today and start tracking your expenses with
-            ease.
+            Create Your Account Today And Start Tracking Your Expenses To Take
+            Control Of Your Financial Future.
           </p>
           <div
             className="w-full max-w-sm mt-8"

@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from "react-router";
 import { useContext } from "react";
 import { AuthContext } from "../Providers/AuthContext";
+import Loading from "../Components/loading";
 
 
 const PrivateRoute = ({ children }) => {
@@ -8,7 +9,7 @@ const PrivateRoute = ({ children }) => {
   const location = useLocation();
 
   if (loading) {
-    return <h1>loading</h1>;
+    return <Loading></Loading>;
   }
 
   if (user && user?.email) {

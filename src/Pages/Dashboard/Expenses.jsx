@@ -23,7 +23,7 @@ const Expenses = () => {
     if (!user?.email) return;
 
     axios
-      .get("http://localhost:5000/expenses", {
+      .get("https://personal-expense-tracker-server.vercel.app/expenses", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -83,7 +83,7 @@ const Expenses = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://localhost:5000/expenses/${expenseId}`, {
+          .delete(`https://personal-expense-tracker-server.vercel.app/expenses/${expenseId}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },

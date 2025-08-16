@@ -3,6 +3,8 @@ import { Link, Outlet, useLocation } from "react-router";
 import { FaTachometerAlt, FaPlus, FaList, FaSignOutAlt } from "react-icons/fa";
 import { AuthContext } from "../Providers/AuthContext";
 
+import logo from "../assets/usd-circle.png";
+
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
@@ -16,11 +18,12 @@ export default function DashboardLayout() {
 
   return (
     <div className="flex h-screen bg-[#F5EFFF] text-gray-800 font-medium">
-      
       {/* This Is The  Mobile Navbar To Open And Close The Sidebar */}
 
       <div className="md:hidden fixed top-0 left-0 w-full bg-[#A594F9] text-white flex items-center justify-between px-4 py-3 shadow-md z-20">
+        <Link to="/" ><img className="w-8 " src={logo} alt="" /></Link>
         <h1 className="text-lg font-semibold">Expense Tracker</h1>
+
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="text-xl"
@@ -38,6 +41,9 @@ export default function DashboardLayout() {
         } md:translate-x-0`}
       >
         <div className="hidden md:flex items-center px-5 py-5 border-b border-[#CDC1FF] text-lg font-semibold">
+          <Link to="/">
+            <img className="w-8 mr-2" src={logo} alt="" />
+          </Link>{" "}
           Expense Tracker
         </div>
 
